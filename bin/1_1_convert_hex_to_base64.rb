@@ -36,3 +36,12 @@ def decimal_to_base64(decimal)
   end
   base64.reverse
 end
+
+def decimal_to_binary(decimal)
+  binary = ''
+  until decimal.zero?
+    binary << (decimal % 2).to_s
+    decimal /= 2
+  end
+  binary.reverse
+end
