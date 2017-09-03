@@ -3,14 +3,24 @@ def hex_to_base64(hex)
   decimal_to_base64(decimal)
 end
 
+def hex_to_binary(hex)
+  decimal = hex_to_decimal(hex)
+  decimal_to_binary(decimal)
+end
+
+def binary_to_hex(binary)
+  decimal = binary_to_decimal(binary)
+  decimal_to_hex(decimal)
+end
+
 def hex_to_decimal(hex)
-  dictionary = { '0' => '0', '1' => '1', '2' => '2', '3' => '3', '4' => '4',
-                 '5' => '5', '6' => '6', '7' => '7', '8' => '8', '9' => '9',
-                 'a' => '10', 'b' => '11', 'c' => '12', 'd' => '13',
-                 'e' => '14', 'f' => '15' }
-  chars = hex.chars.reverse
-  decimals = chars.map.with_index do |char, index|
-    dictionary[char].to_i * (16**index)
+  dictionary = { '0' => 0, '1' => 1, '2' => 2, '3' => 3, '4' => 4,
+                 '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9,
+                 'a' => 10, 'b' => 11, 'c' => 12, 'd' => 13,
+                 'e' => 14, 'f' => 15 }
+  hex_digits = hex.chars.reverse
+  decimals = hex_digits.map.with_index do |hex_digit, index|
+    dictionary[hex_digit] * (16**index)
   end
   decimals.sum
 end
@@ -44,4 +54,24 @@ def decimal_to_binary(decimal)
     decimal /= 2
   end
   binary.reverse
+end
+
+def decimal_to_hex(decimal)
+  dictionary = { 0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 6 => '6',
+                 7 => '7', 8 => '8', 9 => '9', 10 => 'a', 11 => 'b', 12 => 'c',
+                 13 => 'd', 14 => 'e', 15 => 'f' }
+  hex = ''
+  until decimal.zero?
+    hex << dictionary[decimal % 16]
+    decimal /= 16
+  end
+  hex.reverse
+end
+
+def binary_to_decimal(binary)
+  bits = binary.chars.reverse
+  decimals = bits.map.with_index do |bit, index|
+    bit.to_i * (2**index)
+  end
+  decimals.sum
 end
