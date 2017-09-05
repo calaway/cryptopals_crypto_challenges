@@ -1,7 +1,3 @@
-Dir['./bin/**/*.rb'].each do |file|
-  require file unless file.split('/').last == __FILE__.split('/').last
-end
-
 def bite_to_letter
   { '00100000' => ' ', '00100001' => '!', '00100010' => '"', '00100011' => '#', '00100100' => '$',
     '00100101' => '%', '00100110' => '&', '00100111' => '\'', '00101000' => '(', '00101001' => ')',
@@ -50,6 +46,6 @@ def english_letter_frequency_score(text)
   expected_frequencies = { 'a' => 8.167, 'b' => 1.492, 'c' => 2.782, 'd' => 4.253, 'e' => 12.702, 'f' => 2.228, 'g' => 2.015, 'h' => 6.094, 'i' => 6.966, 'j' => 0.153, 'k' => 0.772, 'l' => 4.025, 'm' => 2.406, 'n' => 6.749, 'o' => 7.507, 'p' => 1.929, 'q' => 0.095, 'r' => 5.987, 's' => 6.327, 't' => 9.056, 'u' => 2.758, 'v' => 0.978, 'w' => 2.360, 'x' => 0.150, 'y' => 1.974, 'z' => 0.074 }
   actual_frequencies = letter_frequencies(text)
   expected_frequencies.reduce(0) do |score, expected_frequency|
-    score + (expected_frequency[1] - actual_frequencies[expected_frequency[0]]).abs
+    score + ((expected_frequency[1] - actual_frequencies[expected_frequency[0]])**2 / expected_frequency[1])
   end
 end
