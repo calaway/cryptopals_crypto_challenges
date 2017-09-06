@@ -34,6 +34,15 @@ def bites_to_letters(bites)
   plaintext
 end
 
+def all_single_character_decodings(ciphertext_binary)
+  letter_to_bite.each_with_object({}) do |letter_bite, collection|
+    repetitions = (ciphertext_binary.length / 8.0).ceil
+    pad = letter_bite[1] * repetitions
+    plaintext_bites = xor(ciphertext_binary, pad)
+    collection[letter_bite[0]] = bites_to_letters(plaintext_bites)
+  end
+end
+
 def letter_frequencies(text)
   text = text.downcase.gsub(/[^a-z]/, '')
   point = 100 / text.length.to_f
@@ -48,4 +57,23 @@ def english_letter_frequency_score(text)
   expected_frequencies.reduce(0) do |score, expected_frequency|
     score + ((expected_frequency[1] - actual_frequencies[expected_frequency[0]])**2 / expected_frequency[1])
   end
+end
+
+def keep_only_longest_strings(texts)
+  max_length = texts.map(&:length).max
+  texts.find_all do |text|
+    text.length == max_length
+  end
+end
+
+def rank_texts_by_score(texts)
+  texts = keep_only_longest_strings(texts)
+  texts.map do |text|
+    [english_letter_frequency_score(text), text]
+  end.sort
+end
+
+def find_most_likely_single_byte_xor_cipher(ciphertext_binary)
+  all_plaintexts = all_single_character_decodings(ciphertext_binary).values
+  rank_texts_by_score(all_plaintexts).first.last
 end
